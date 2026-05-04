@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Dating App</title>
+</head>
+<body style="background:#0f0f0f; color:white; font-family:sans-serif;">
+  <h2>💬 AI Dating Chat</h2>
+
+  <input id="msg" placeholder="Type message..." style="width:300px;" />
+  <button onclick="sendMsg()">Send</button>
+
+  <div id="chat"></div>
+
+<script>
+let ws = new WebSocket("ws://127.0.0.1:8000/ws");
+
+ws.onmessage = function(event) {
+    let data = JSON.parse(event.data);
+    let div = document.getElementById("chat");
+
+    div.innerHTML += `
+      <p>🧑 ${data.message}</p>
+      <p>🧠 Sentiment: ${JSON.stringify(data.sentiment)}</p>
+      <hr/>
+    `;
+}
+
+function sendMsg() {
+    let input = document.getElementById("msg");
+    ws.send(input.value);
+    input.value = "";
+}
+</script>
+
+</body>
+</html>
